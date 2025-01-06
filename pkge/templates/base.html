@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirm Deletion</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .warning-box {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #ffcccc;
+            border: 2px solid #ff0000;
+            padding: 20px;
+            text-align: center;
+            z-index: 1000;
+        }
+
+        .grow-and-shake {
+            display: block !important;
+            animation:
+                growIn 0.2s ease-out,
+                subtleShake 0.5s cubic-bezier(.36, .07, .19, .97) 0.2s;
+        }
+
+        @keyframes subtleShake {
+            10%, 90% { transform: translate(-50.5%, -50%); }
+            20%, 80% { transform: translate(-49.5%, -50%); }
+            30%, 50%, 70% { transform: translate(-50.5%, -50%); }
+            40%, 60% { transform: translate(-49.5%, -50%); }
+        }
+
+        @keyframes growIn {
+            0% {
+                transform: translate(-50%, -50%) scale(0);
+                opacity: 0;
+            }
+            70% {
+                transform: translate(-50%, -50%) scale(1.1);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    {% block content %}
+    {% endblock %}
+    <div id="warning-box" class="warning-box">
+        <p>Are you sure you want to delete this submission?</p>
+        <button id="confirm-delete" class="btn btn-danger">Yes, Delete</button>
+        <button id="cancel-delete" class="btn btn-secondary">Cancel</button>
+    </div>
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            const deleteButtons = $('.delete-btn'); // Buttons triggering deletion
+            const warningBox = $('#warning-box');
+            const confirmDeleteButton = $('#confirm-delete');
+            const cancelDeleteButton = $('#cancel-delete');
+            let currentForm = null; // To track which form to submit
+
+            // Show confirmation box
+            deleteButtons.on('click', function (e) {
+                e.preventDefault();
+                currentForm = $(this).closest('form');
+                warningBox.removeClass('grow-and-shake').addClass('grow-and-shake');
+            });
+
+            // Confirm deletion
+            confirmDeleteButton.on('click', function () {
+                if (currentForm) {
+                    currentForm.submit();
+                }
+            });
+
+            // Cancel deletion
+            cancelDeleteButton.on('click', function () {
+                warningBox.removeClass('grow-and-shake');
+            });
+        });
+    </script>
+</body>
+
+</html>

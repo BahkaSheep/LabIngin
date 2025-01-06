@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <div class="container mt-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="mb-0">Pending submissions</h1>
+            <a href="{% url 'profile' %}" class="btn btn-outline-primary">Profile</a>
+        </div>
+        {% if packages %}
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Description</th>
+                        <th>Author</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for package in packages %}
+                        <tr>
+                            <td>{{ package.title }}</td>
+                            <td>{{ package.description }}</td>
+                            <td>{{ package.author.username }}</td>                       
+                            <td>
+                                <!-- Remeber to fix this-->
+                                <a href="{% url 'approve_package' package.id %}" class="btn btn-success btn-sm">Approve</a>
+                                <a href="{% url 'deny_package' package.id %}" class="btn btn-danger btn-sm">Deny</a>
+                                <a href="{% url 'admin_edit_submission' package.id %}" class="btn btn-primary btn-sm">Edit</a>
+                            </td>
+                            <td>
+                                {% if package.thumbnail %}
+                                    <img src="{{ package.thumbnail.url }}" alt="{{ package.title }}" class="img-thumbnail" style="max-width: 100px; max-height: 100px;">
+                                {% else %}
+                                    <p>No Thumbnail</p>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No pending submissions.</p>
+        {% endif %}
+    </div>
+</body>
+</html>
